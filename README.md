@@ -8,6 +8,8 @@ This repository uses a **monorepo structure**:
 
 root
 ├── server/ # Backend
+
+
 └── client/ # Frontend
 
 
