@@ -1,46 +1,161 @@
-# Getting Started with Create React App
+# SaaS Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fully functional single-tenant SaaS system for client, ticket, and service management.  
+Backend is built with **Node.js, Express, Prisma 7** and PostgreSQL.  
+Frontend is built with **React + TypeScript + TailwindCSS**.
 
-## Available Scripts
+This repository uses a **monorepo structure**:
 
-In the project directory, you can run:
+root
+├── server/ # Backend
+└── client/ # Frontend
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## Table of Contents
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [Features](#features)
+- [Requirements](#requirements)
+- [Setup](#setup)
+  - [Environment Variables](#environment-variables)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Usage](#usage)
+- [Database](#database)
+- [Project Structure](#project-structure)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Manage clients, tickets (service orders), and services
+- Upload files attached to tickets
+- Feature-based architecture for easy scalability
+- Fully tested with Postman
+- Ready for production
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Requirements
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Node.js v18+  
+- npm v9+  
+- PostgreSQL v15+  
+- Git  
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Setup
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Environment Variables
 
-## Learn More
+Create a `.env` file in the **server/** folder based on `.env.example`:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+> Replace `user`, `password`, `localhost`, and `saasdb` with your PostgreSQL credentials.  
+
+### Backend Setup
+
+```bash
+cd server
+npm install
+
+# Run Prisma migrations (creates tables)
+npx prisma migrate dev
+
+# Start development server
+npm run dev
+
+The backend will run at: http://localhost:3333
+
+
+Frontend Setup
+
+cd ../client
+npm install
+
+# Start frontend server
+npm start
+
+The frontend will run at: http://localhost:3000
+
+
+Usage
+
+Navigate to http://localhost:3000 to use the application
+
+API endpoints are under http://localhost:3333
+
+Example Postman collection is included in /docs (optional)
+
+Database
+
+We use PostgreSQL as the database. Prisma 7 handles migrations and client generation.
+Tables:
+
+clients
+
+tickets
+
+services
+
+photos (attachments)
+
+
+Project Structure
+
+Backend (server/)
+
+server/
+├── prisma/            # Prisma schema & migrations
+├── src/
+│   ├── features/      # Feature-based: clients, tickets, services
+│   ├── lib/           # Transversal helpers: prisma client, validation, error handler
+│   ├── routes.ts      # Root routes aggregating features
+│   ├── server.ts      # Express server
+│   └── uploads/       # File uploads
+├── package.json
+└── tsconfig.json
+
+Frontend (client/)
+
+client/
+├── src/
+│   ├── features/      # Feature-based logic: hooks, forms, lists
+│   ├── pages/         # Screens composing UI
+│   ├── lib/           # Transversal helpers: API client, toast
+│   ├── App.tsx        # Root component
+│   └── index.tsx      # Entry point
+├── package.json
+└── tsconfig.json
+
+Notes
+
+Single-tenant: no authentication implemented
+
+Feature-based structure allows easy scalability and clear separation of concerns
+
+Uploads folder is ignored in Git (.gitignore)
+
+Backend tested with Postman
+
+Frontend tested locally
+
+
+License
+
+MIT
+
+
+---
+
+# `.env.example`
+
+```env
+# PostgreSQL connection URL
+DATABASE_URL=postgresql://user:password@localhost:5432/saasdb
+
+# Backend port
+PORT=3333
