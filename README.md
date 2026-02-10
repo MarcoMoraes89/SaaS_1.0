@@ -7,8 +7,9 @@ Frontend is built with **React + TypeScript + TailwindCSS**.
 This repository uses a **monorepo structure**:
 
 root
-├── server/ # Backend
 
+
+├── server/ # Backend
 
 └── client/ # Frontend
 
