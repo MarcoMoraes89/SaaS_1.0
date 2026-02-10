@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  document  String?  @unique
+  phone     String
+  email     String?
+  createdAt DateTime @default(now())
+
+  tickets Ticket[]
+
+  @@map("clients")
+}
+
+model Ticket {
+  id          String   @id @default(uuid())
+  sequentialId  Int          @unique
+  title       String
+  description String
+
+  // 🔹 Status OPERACIONAL da OS
+  status TicketStatus @default(ORCAMENTO)
+
+  // 🔹 Status de PAGAMENTO (financeiro)
+  paymentStatus PaymentStatus @default(PENDENTE)
+  paidAt        DateTime?
+
+  priority Priority @default(MEDIUM)
+
+  estimatedCost Float?
+  totalCost     Float?
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
+  photos   Photo[]
+  services Service[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tickets")
+}
+
+model Photo {
+  id       String @id @default(uuid())
+  url      String
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id])
+
+  @@map("photos")
+}
+
+model Service {
+  id          String @id @default(uuid())
+  description String
+  price       Float
+  ticketId    String
+  ticket      Ticket @relation(fields: [ticketId], references: [id])
+
+  @@map("services")
+}
+
+//
+// 🔹 ENUMS
+//
+
+enum TicketStatus {
+  ORCAMENTO     // Antiga Aberta/Em Cotação
+  APROVACAO     // Aguardando o "ok" do cliente
+  AGUARDANDO_FORNECEDOR
+  EM_EXECUCAO
+  FINALIZADA
+  CANCELADA
+}
+
+enum PaymentStatus {
+  PENDENTE
+  PAGO
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
